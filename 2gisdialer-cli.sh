@@ -1,11 +1,12 @@
 #!/bin/bash
+baseurl='http://apps.2gis.ru/phone/'
+seed="${RANDOM}"
+tmpfile="/tmp/2gis.$seed"
+
 read -p "Телефон: " phone
-curl -s "http://apps.2gis.ru/phone/$phone"|grep "var data"|sed s/,\"/\\n/g|sed 's/\        var data = {"formattedPhone"/Номер/'|grep Номер
-curl -s "http://apps.2gis.ru/phone/$phone"|grep "var data"|sed s/,\"/\\n/g|sed 's/region"/Регион/'|grep Регион
-curl -s "http://apps.2gis.ru/phone/$phone"|grep "var data"|sed s/,\"/\\n/g|sed 's/company"/Компания/'|grep Компания
-curl -s "http://apps.2gis.ru/phone/$phone"|grep "var data"|sed s/,\"/\\n/g|sed 's/blockedInfo"/Жалобы/'|grep Жалобы
-curl -s "http://apps.2gis.ru/phone/79227156410"|grep "Ничего не нашлось"|sed 's/<title>//'|sed 's/<\/title>//'|sed 's/\        //'
-
-
-
-
+wget -qO ${tmpfile} ${baseurl}${phone}
+grep "var data" ${tmpfile}|sed s/,\"/\\n/g|sed 's/\        var data = {"formattedPhone"/Номер/'|grep Номер
+grep "var data" ${tmpfile}|sed s/,\"/\\n/g|sed 's/region"/Регион/'|grep Регион
+grep "var data" ${tmpfile}|sed s/,\"/\\n/g|sed 's/company"/Компания/'|grep Компания
+grep "var data" ${tmpfile}|sed s/,\"/\\n/g|sed 's/blockedInfo"/Жалобы/'|grep Жалобы
+rm -f ${tmpfile}
